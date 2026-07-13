@@ -9,16 +9,22 @@
 - Documento de plan de iteraciones.
 - Documento de requisitos específicos.
 - Documento de base de implementación.
+- Proyecto base con React, TypeScript y Vite.
+- Canvas principal basado en React Flow.
+- Componente de nota editable con título, contenido, tipo, color y tags.
+- Creación, movimiento y eliminación de notas.
+- Creación y eliminación de conexiones entre notas.
+- Guardado automático del workspace en LocalStorage.
+- Sidebar con búsqueda, resumen, tags y selección actual.
 
 ### Cambiado
 
 - Se estableció Nots26 como nombre del producto.
 - Se definió una metodología Scrum ajustada como enfoque de trabajo.
 - Se incorporó React Flow como base técnica propuesta para el canvas interactivo.
+- Se inició la construcción del MVP siguiendo la Iteración 1 del plan.
 
 ### Pendiente
 
-- Crear el proyecto base de la aplicación.
-- Instalar dependencias iniciales.
-- Implementar el canvas principal.
-- Implementar creación, edición, arrastre y conexiones de notas.
+- Refinar experiencia táctil y estados de accesibilidad.
+- Profundizar la Iteración 2 con mejoras de arrastre, color y organización visual.
