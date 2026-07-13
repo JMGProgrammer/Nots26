@@ -25,7 +25,7 @@ export function NoteNode({ id, data, selected }: NodeProps<NoteData>) {
 
   return (
     <article
-      className={`note-node ${selected ? "is-selected" : ""}`}
+      className={`note-node ${selected ? "is-selected" : ""} ${data.kind === "task" && data.done ? "is-done" : ""}`}
       style={{ "--note-color": data.color } as CSSProperties}
     >
       <Handle type="target" position={Position.Top} className="note-handle" />
@@ -71,6 +71,17 @@ export function NoteNode({ id, data, selected }: NodeProps<NoteData>) {
           ))}
         </div>
       </div>
+
+      {data.kind === "task" && (
+        <label className="task-toggle nodrag">
+          <input
+            type="checkbox"
+            checked={Boolean(data.done)}
+            onChange={(event) => update({ done: event.target.checked })}
+          />
+          <span>{data.done ? "Completada" : "Pendiente"}</span>
+        </label>
+      )}
 
       <input
         className="note-tags nodrag"

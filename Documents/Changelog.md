@@ -16,6 +16,10 @@
 - Creación y eliminación de conexiones entre notas.
 - Guardado automático del workspace en LocalStorage.
 - Sidebar con búsqueda, resumen, tags y selección actual.
+- Menú contextual del canvas para crear notas en la posición del usuario.
+- Creación rápida de notas por tipo: texto, tarea e idea.
+- Creación rápida de notas por color desde el menú del canvas.
+- Estado de tarea pendiente/completada dentro de las notas tipo tarea.
 
 ### Cambiado
 
@@ -23,8 +27,12 @@
 - Se definió una metodología Scrum ajustada como enfoque de trabajo.
 - Se incorporó React Flow como base técnica propuesta para el canvas interactivo.
 - Se inició la construcción del MVP siguiendo la Iteración 1 del plan.
+- Se avanzó la Iteración 2 con mejoras de interacción visual y organización.
+- Se ajustó el canvas para crear notas mediante click derecho o doble click en el espacio.
+- Se activó snap-to-grid para ordenar mejor el posicionamiento de notas.
+- Se corrigió la grilla duplicada del canvas dejando una sola capa visual.
 
 ### Pendiente
 
 - Refinar experiencia táctil y estados de accesibilidad.
-- Profundizar la Iteración 2 con mejoras de arrastre, color y organización visual.
+- Profundizar la Iteración 2 con selección múltiple, agrupación visual y mejor soporte táctil.

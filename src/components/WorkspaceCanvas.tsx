@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, type MouseEvent } from "react";
 import ReactFlow, {
   Background,
   BackgroundVariant,
@@ -12,13 +12,15 @@ import ReactFlow, {
   type EdgeChange,
   type NodeChange,
   type NodeMouseHandler,
+  type ReactFlowInstance,
 } from "reactflow";
 import "reactflow/dist/style.css";
+import { CanvasContextMenu } from "./CanvasContextMenu";
 import { NoteNode as NoteNodeComponent } from "./NoteNode";
 import { EmptyState } from "./EmptyState";
 import { SidebarPanel } from "./SidebarPanel";
 import { Toolbar } from "./Toolbar";
-import type { NoteData, NoteEdge, NoteNode } from "../types/note";
+import type { NoteData, NoteEdge, NoteKind, NoteNode } from "../types/note";
 import { createId } from "../utils/id";
 import { clearWorkspace, loadWorkspace, saveWorkspace } from "../utils/storage";
 
@@ -28,17 +30,40 @@ const nodeTypes = {
 
 const defaultColor = "#6f4bd8";
 
-function createNote(position: { x: number; y: number }, index: number): NoteNode {
+interface CanvasMenuState {
+  screen: { x: number; y: number };
+  flow: { x: number; y: number };
+}
+
+function getDefaultTitle(kind: NoteKind, index: number) {
+  if (kind === "task") {
+    return `Tarea ${index}`;
+  }
+
+  if (kind === "idea") {
+    return `Idea ${index}`;
+  }
+
+  return `Nota ${index}`;
+}
+
+function createNote(
+  position: { x: number; y: number },
+  index: number,
+  kind: NoteKind = "text",
+  color = defaultColor,
+): NoteNode {
   return {
     id: createId("note"),
     type: "note",
     position,
     data: {
-      title: `Nota ${index}`,
+      title: getDefaultTitle(kind, index),
       content: "",
-      color: defaultColor,
-      kind: "text",
+      color,
+      kind,
       tags: [],
+      done: false,
     },
   };
 }
@@ -50,6 +75,8 @@ export function WorkspaceCanvas() {
   const [query, setQuery] = useState("");
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
+  const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
+  const [canvasMenu, setCanvasMenu] = useState<CanvasMenuState | null>(null);
 
   useEffect(() => {
     saveWorkspace({ nodes, edges });
@@ -122,6 +149,10 @@ export function WorkspaceCanvas() {
     });
   }, []);
 
+  const addNoteAt = useCallback((position: { x: number; y: number }, kind: NoteKind, color: string) => {
+    setNodes((current) => [...current, createNote(position, current.length + 1, kind, color)]);
+  }, []);
+
   const resetWorkspace = useCallback(() => {
     if (!window.confirm("Limpiar el workspace completo?")) {
       return;
@@ -155,8 +186,50 @@ export function WorkspaceCanvas() {
   }, []);
 
   const onNodeClick = useCallback<NodeMouseHandler>((_, node) => {
+    setCanvasMenu(null);
     setSelectedNodeId(node.id);
   }, []);
+
+  const openCanvasMenu = useCallback(
+    (event: MouseEvent<Element>) => {
+      if (!reactFlowInstance) {
+        return;
+      }
+
+      const target = event.target as HTMLElement;
+      if (event.type === "dblclick" && target.closest(".react-flow__node")) {
+        return;
+      }
+
+      event.preventDefault();
+      const flow = reactFlowInstance.screenToFlowPosition({
+        x: event.clientX,
+        y: event.clientY,
+      });
+
+      setCanvasMenu({
+        screen: {
+          x: Math.min(event.clientX, window.innerWidth - 236),
+          y: Math.min(event.clientY, window.innerHeight - 214),
+        },
+        flow,
+      });
+      setSelectedNodeId(null);
+    },
+    [reactFlowInstance],
+  );
+
+  const createFromMenu = useCallback(
+    (kind: NoteKind, color: string) => {
+      if (!canvasMenu) {
+        return;
+      }
+
+      addNoteAt(canvasMenu.flow, kind, color);
+      setCanvasMenu(null);
+    },
+    [addNoteAt, canvasMenu],
+  );
 
   const selectedNode = nodes.find((node) => node.id === selectedNodeId);
 
@@ -189,7 +262,15 @@ export function WorkspaceCanvas() {
               onEdgesChange={onEdgesChange}
               onConnect={onConnect}
               onNodeClick={onNodeClick}
-              onPaneClick={() => setSelectedNodeId(null)}
+              onPaneClick={() => {
+                setSelectedNodeId(null);
+                setCanvasMenu(null);
+              }}
+              onPaneContextMenu={openCanvasMenu}
+              onDoubleClick={openCanvasMenu}
+              onInit={setReactFlowInstance}
+              snapToGrid
+              snapGrid={[12, 12]}
               fitView
               deleteKeyCode={["Backspace", "Delete"]}
             >
@@ -204,6 +285,14 @@ export function WorkspaceCanvas() {
           </ReactFlowProvider>
 
           {!nodes.length && <EmptyState onAddNote={addNote} />}
+          {canvasMenu && (
+            <CanvasContextMenu
+              x={canvasMenu.screen.x}
+              y={canvasMenu.screen.y}
+              onCreate={createFromMenu}
+              onClose={() => setCanvasMenu(null)}
+            />
+          )}
         </section>
       </main>
     </div>
