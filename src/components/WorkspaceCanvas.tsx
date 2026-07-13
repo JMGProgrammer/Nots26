@@ -73,6 +73,8 @@ export function WorkspaceCanvas() {
   const [nodes, setNodes] = useState<NoteNode[]>(initialWorkspace.nodes);
   const [edges, setEdges] = useState<NoteEdge[]>(initialWorkspace.edges);
   const [query, setQuery] = useState("");
+  const [kindFilter, setKindFilter] = useState<"all" | NoteKind>("all");
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
@@ -112,18 +114,20 @@ export function WorkspaceCanvas() {
     () =>
       nodes.map((node) => ({
         ...node,
-        hidden: query
-          ? !`${node.data.title} ${node.data.content} ${node.data.tags.join(" ")}`
-              .toLowerCase()
-              .includes(query.toLowerCase())
-          : false,
+        hidden:
+          (kindFilter !== "all" && node.data.kind !== kindFilter) ||
+          (query
+            ? !`${node.data.title} ${node.data.content} ${node.data.tags.join(" ")}`
+                .toLowerCase()
+                .includes(query.toLowerCase())
+            : false),
         data: {
           ...node.data,
           onUpdate: updateNote,
           onDelete: deleteNote,
         },
       })),
-    [deleteNote, nodes, query, updateNote],
+    [deleteNote, kindFilter, nodes, query, updateNote],
   );
 
   const visibleNodeIds = useMemo(
@@ -243,12 +247,16 @@ export function WorkspaceCanvas() {
         onReset={resetWorkspace}
       />
 
-      <main className="workspace-main">
+      <main className={`workspace-main ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}>
         <SidebarPanel
           nodes={nodes}
           edges={edges}
           query={query}
+          collapsed={sidebarCollapsed}
+          kindFilter={kindFilter}
           onQueryChange={setQuery}
+          onCollapsedChange={setSidebarCollapsed}
+          onKindFilterChange={setKindFilter}
           selectedNode={selectedNode}
         />
 

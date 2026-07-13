@@ -25,7 +25,7 @@ export function NoteNode({ id, data, selected }: NodeProps<NoteData>) {
 
   return (
     <article
-      className={`note-node ${selected ? "is-selected" : ""} ${data.kind === "task" && data.done ? "is-done" : ""}`}
+      className={`note-node kind-${data.kind} ${selected ? "is-selected" : ""} ${data.kind === "task" && data.done ? "is-done" : ""}`}
       style={{ "--note-color": data.color } as CSSProperties}
     >
       <Handle type="target" position={Position.Top} className="note-handle" />
@@ -43,6 +43,8 @@ export function NoteNode({ id, data, selected }: NodeProps<NoteData>) {
           <Trash2 size={14} aria-hidden />
         </button>
       </div>
+
+      <div className="note-type-chip nodrag">{data.kind === "task" ? "Tarea" : data.kind === "idea" ? "Idea" : "Texto"}</div>
 
       <textarea
         className="note-content nodrag"

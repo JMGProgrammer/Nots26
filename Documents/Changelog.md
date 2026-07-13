@@ -20,6 +20,10 @@
 - Creación rápida de notas por tipo: texto, tarea e idea.
 - Creación rápida de notas por color desde el menú del canvas.
 - Estado de tarea pendiente/completada dentro de las notas tipo tarea.
+- Sidebar contraíble con modo rail para ampliar el espacio del canvas.
+- Filtros por tipo de nota: texto, tareas e ideas.
+- Conteos por tipo de nota dentro del sidebar.
+- Identidad visual diferenciada para notas de texto, tareas e ideas.
 
 ### Cambiado
 
@@ -31,8 +35,12 @@
 - Se ajustó el canvas para crear notas mediante click derecho o doble click en el espacio.
 - Se activó snap-to-grid para ordenar mejor el posicionamiento de notas.
 - Se corrigió la grilla duplicada del canvas dejando una sola capa visual.
+- Se completó la Iteración 2 con mejoras de organización visual y soporte responsive.
+- Se ajustó el sidebar en pantallas pequeñas para conservar controles sin ocultarlos por completo.
+- Se ampliaron zonas interactivas en dispositivos táctiles.
 
 ### Pendiente
 
-- Refinar experiencia táctil y estados de accesibilidad.
-- Profundizar la Iteración 2 con selección múltiple, agrupación visual y mejor soporte táctil.
+- Iniciar la Iteración 3 con mejoras de conexiones entre notas.
+- Permitir edición o categorización de conexiones.
+- Mejorar eliminación y selección explícita de conexiones.
