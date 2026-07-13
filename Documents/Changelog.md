@@ -24,6 +24,10 @@
 - Filtros por tipo de nota: texto, tareas e ideas.
 - Conteos por tipo de nota dentro del sidebar.
 - Identidad visual diferenciada para notas de texto, tareas e ideas.
+- README principal con instrucciones de instalacion, uso, comandos y secciones para banner y capturas.
+- Integracion de favicon y logo desde `public/` en la aplicacion.
+- Uso del banner final de `public/images/` en el README.
+- Reemplazo del logo SVG por `Nots26-logo.png` y uso exclusivo de `favicon.ico`.
 
 ### Cambiado
 

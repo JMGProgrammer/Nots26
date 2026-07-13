@@ -18,7 +18,9 @@ export function Toolbar({
   return (
     <header className="toolbar">
       <div className="brand">
-        <span className="brand-mark">N26</span>
+        <span className="brand-mark">
+          <img src="/Nots26-logo.png" alt="" aria-hidden />
+        </span>
         <div>
           <h1>Nots26</h1>
           <p>
